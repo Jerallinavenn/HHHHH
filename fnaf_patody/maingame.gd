@@ -874,6 +874,8 @@ func update_time_display():
 	time_label.text = hour_texts[current_hour_index]
 
 func update_power_texture():
+	# Максимальный уровень нагрузки = 4: две двери (+2) + монитор (+1) + один свет (+1).
+	# Свет взаимоисключающий (включение одного гасит другой), поэтому 5 быть не может.
 	match power_usage_level:
 		1:
 			power_texture.texture = POWER_SPRITE_1
@@ -882,7 +884,7 @@ func update_power_texture():
 		3:
 			power_texture.texture = POWER_SPRITE_3
 		_:
-			power_texture.texture = POWER_SPRITE_4  # 5+ (монитор + двери + свет) — максимальная планка
+			power_texture.texture = POWER_SPRITE_4
 
 func update_power_label():
 	power_label.text = str(int(current_power)) + "%"
