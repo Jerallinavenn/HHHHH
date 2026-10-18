@@ -1,0 +1,98 @@
+[gd_scene load_steps=13 format=3 uid="uid://s7bhmgrorw1i"]
+
+[ext_resource type="Script" uid="uid://dk3t8tcrdhkw7" path="res://maingame.gd" id="1_qfmxy"]
+[ext_resource type="Texture2D" uid="uid://bc0we42jlrjdc" path="res://office_light.png" id="3_ekqhg"]
+[ext_resource type="Script" uid="uid://bfg1t0821c0ea" path="res://button.gd" id="3_l262f"]
+[ext_resource type="Texture2D" uid="uid://c6uynvwpui6hb" path="res://left_button_light.png" id="4_fputw"]
+[ext_resource type="Texture2D" uid="uid://dag50xq8pm4ce" path="res://left_button_pressed_light.png" id="5_ekqhg"]
+[ext_resource type="Texture2D" uid="uid://c1eg8ca8pd7mi" path="res://right_button_light.png" id="6_olu43"]
+[ext_resource type="Texture2D" uid="uid://bnx8ait8b6tj5" path="res://right_button_pressed_light.png" id="7_w5oa7"]
+[ext_resource type="Texture2D" uid="uid://c47lfddww7cme" path="res://corridor_light_left.png" id="8_ekqhg"]
+[ext_resource type="Shader" uid="uid://cho0nuotcn1fs" path="res://LightMask.gdshader" id="8_olu43"]
+[ext_resource type="Texture2D" uid="uid://77awxe3aibxk" path="res://corridor_light_right.png" id="9_olu43"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w5oa7"]
+shader = ExtResource("8_olu43")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ymkym"]
+size = Vector2(86, 120)
+
+[node name="Maingame" type="Node2D"]
+script = ExtResource("1_qfmxy")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_left = -320
+limit_top = 0
+limit_right = 320
+limit_bottom = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera2D"]
+position = Vector2(-640, 540)
+texture = ExtResource("3_ekqhg")
+
+[node name="OfficeMask" type="Sprite2D" parent="."]
+visible = false
+
+[node name="Lights" type="Node2D" parent="."]
+position = Vector2(-593, 813)
+
+[node name="LeftLight" type="Sprite2D" parent="Lights"]
+visible = false
+material = SubResource("ShaderMaterial_w5oa7")
+position = Vector2(-1327, -813)
+texture = ExtResource("8_ekqhg")
+offset = Vector2(407, 540)
+
+[node name="RightLight" type="Sprite2D" parent="Lights"]
+visible = false
+material = SubResource("ShaderMaterial_w5oa7")
+position = Vector2(1235, -813)
+texture = ExtResource("9_olu43")
+offset = Vector2(-404, 540)
+
+[node name="Buttons" type="Node2D" parent="."]
+position = Vector2(-638, 574)
+
+[node name="LeftDoorButton" type="Area2D" parent="Buttons"]
+position = Vector2(-1197, -45)
+script = ExtResource("3_l262f")
+normal_texture = ExtResource("4_fputw")
+pressed_texture = ExtResource("5_ekqhg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Buttons/LeftDoorButton"]
+shape = SubResource("RectangleShape2D_ymkym")
+
+[node name="Sprite2D" type="Sprite2D" parent="Buttons/LeftDoorButton"]
+
+[node name="LeftLightButton" type="Area2D" parent="Buttons"]
+position = Vector2(-1199, 124)
+script = ExtResource("3_l262f")
+normal_texture = ExtResource("4_fputw")
+pressed_texture = ExtResource("5_ekqhg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Buttons/LeftLightButton"]
+shape = SubResource("RectangleShape2D_ymkym")
+
+[node name="Sprite2D" type="Sprite2D" parent="Buttons/LeftLightButton"]
+
+[node name="RightDoorButton" type="Area2D" parent="Buttons"]
+position = Vector2(1194, -48)
+script = ExtResource("3_l262f")
+normal_texture = ExtResource("6_olu43")
+pressed_texture = ExtResource("7_w5oa7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Buttons/RightDoorButton"]
+shape = SubResource("RectangleShape2D_ymkym")
+
+[node name="Sprite2D" type="Sprite2D" parent="Buttons/RightDoorButton"]
+
+[node name="RightLightButton" type="Area2D" parent="Buttons"]
+position = Vector2(1194, 123)
+script = ExtResource("3_l262f")
+normal_texture = ExtResource("6_olu43")
+pressed_texture = ExtResource("7_w5oa7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Buttons/RightLightButton"]
+shape = SubResource("RectangleShape2D_ymkym")
+
+[node name="Sprite2D" type="Sprite2D" parent="Buttons/RightLightButton"]
