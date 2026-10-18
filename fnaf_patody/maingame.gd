@@ -416,8 +416,12 @@ func _process(delta):
 		if is_cam_tab_flipped:
 			is_monitor_active = true
 			is_monitor_open = true
+			# При открытии монитора свет в коридорах гаснет на 100%
+			turn_off_lights()
 		else:
 			is_monitor_open = false
+			# Свет после закрытия монитора НЕ включается сам —
+			# только по нажатию кнопки (состояние кнопок сохранено)
 	
 	is_cam_tab_hovered = tab_hovered
 	# ================================================
@@ -844,6 +848,22 @@ func calculate_power_usage():
 	if is_right_light_on: power_usage_level += 1
 	if is_left_door_open: power_usage_level += 1
 	if is_right_door_open: power_usage_level += 1
+	# Открытый монитор потребляет +1 уровень энергии (как в FNAF)
+	if is_monitor_active: power_usage_level += 1
+
+func turn_off_lights():
+	# Полностью гасит свет в коридорах (вызывается при открытии монитора).
+	# Состояние кнопок сохраняется — после закрытия монитора свет остаётся
+	# выключенным и включается только повторным нажатием кнопки.
+	if not (is_left_light_on or is_right_light_on):
+		return
+	is_left_light_on = false
+	is_right_light_on = false
+	left_light.visible = false
+	right_light.visible = false
+	update_button_textures()
+	calculate_power_usage()
+	update_power_texture()
 
 func update_time_display():
 	time_label.text = hour_texts[current_hour_index]
@@ -856,8 +876,8 @@ func update_power_texture():
 			power_texture.texture = POWER_SPRITE_2
 		3:
 			power_texture.texture = POWER_SPRITE_3
-		4:
-			power_texture.texture = POWER_SPRITE_4
+		_:
+			power_texture.texture = POWER_SPRITE_4  # 5+ (монитор + двери + свет) — максимальная планка
 
 func update_power_label():
 	power_label.text = str(int(current_power)) + "%"
