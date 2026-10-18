@@ -436,6 +436,9 @@ func _process(delta):
 				is_monitor_active = false
 				is_office_fadein = true
 				office_fadein_progress = 0.0
+				# Страховка: синхронизируем индикатор расхода после полного закрытия монитора
+				calculate_power_usage()
+				update_power_texture()
 		update_monitor_visuals()
 	
 	# === Высветление офиса из чёрного (без изменений, 0.5 сек) ===
@@ -848,20 +851,22 @@ func calculate_power_usage():
 	if is_right_light_on: power_usage_level += 1
 	if is_left_door_open: power_usage_level += 1
 	if is_right_door_open: power_usage_level += 1
-	# Открытый монитор потребляет +1 уровень энергии (как в FNAF)
-	if is_monitor_active: power_usage_level += 1
+	# Открытый монитор потребляет +1 уровень энергии (как в FNAF).
+	# Считаем по is_cam_tab_flipped — он становится true мгновенно при открытии,
+	# а is_monitor_active гаснет только после окончания анимации опускания.
+	if is_cam_tab_flipped: power_usage_level += 1
 
 func turn_off_lights():
 	# Полностью гасит свет в коридорах (вызывается при открытии монитора).
-	# Состояние кнопок сохраняется — после закрытия монитора свет остаётся
-	# выключенным и включается только повторным нажатием кнопки.
-	if not (is_left_light_on or is_right_light_on):
-		return
+	# После закрытия монитора свет остаётся выключенным и включается
+	# только повторным нажатием кнопки.
 	is_left_light_on = false
 	is_right_light_on = false
 	left_light.visible = false
 	right_light.visible = false
 	update_button_textures()
+	# Пересчёт нагрузки делаем ВСЕГДА, даже если свет был уже выключен —
+	# иначе индикатор расхода не синхронизируется с новым состоянием монитора.
 	calculate_power_usage()
 	update_power_texture()
 
